@@ -1,0 +1,34 @@
+services:
+  - type: web
+    name: case-bros
+    env: node
+    plan: free
+    buildCommand: npm install && npm run db:migrate && npm run db:seed && npm run build
+    startCommand: npm start
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: BASE_URL
+        # IMPORTANT: change this to your actual Render URL after the first deploy
+        value: https://case-bros.onrender.com
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: STEAM_API_KEY
+        sync: false
+      - key: ADMIN_STEAM_IDS
+        value: ""
+      - key: STARTING_GEMS_CENTS
+        value: "50000"
+      - key: MARKET_MODE
+        value: "steam"
+      - key: ENABLE_JOBS
+        value: "true"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: case-bros-db
+          property: connectionString
+
+databases:
+  - name: case-bros-db
+    plan: free
